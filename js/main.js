@@ -39,6 +39,20 @@ const works = [
     client: "独立杂志",
     role: "美术指导",
     desc: "一本关于城市与人文的独立杂志的版式设计。通过严谨的网格、有呼吸感的留白与克制的字体层级，让文字与图像在纸面上形成清晰的阅读节奏。",
+    image: "images/六视图-1.jpg",
+    detail: [
+      "images/六视图-1-2 (3).jpg",
+      "images/六视图-2-2.jpg",
+      "images/六视图-2-3-2.jpg",
+      "images/六视图-3-2.jpg",
+      "images/六视图-3-3.jpg",
+      "images/六视图-4.jpg",
+      "images/六视图-4-2.jpg",
+      "images/六视图-4-3.jpg",
+      "images/六视图-4-4.jpg",
+      "images/六视图-5.jpg",
+      "images/六视图-5-2 (1).jpg",
+    ],
     gradient: ["#5c5c5c", "#262626"],
   },
   {
@@ -92,9 +106,9 @@ const categories = [...new Set(works.map((w) => w.category))];
 function renderCard(work) {
   let media;
   if (work.video) {
-    media = `<video src="${work.video}" ${work.poster ? `poster="${work.poster}"` : ""} muted loop playsinline preload="metadata"></video>`;
+    media = `<video src="${encodeURI(work.video)}" ${work.poster ? `poster="${encodeURI(work.poster)}"` : ""} muted loop playsinline preload="metadata"></video>`;
   } else if (work.image) {
-    media = `<img src="${work.image}" alt="${work.title}" loading="lazy" />`;
+    media = `<img src="${encodeURI(work.image)}" alt="${work.title}" loading="lazy" />`;
   } else {
     media = `<div class="placeholder" style="--ph-a:${work.gradient[0]};--ph-b:${work.gradient[1]}">${work.title}</div>`;
   }
@@ -229,20 +243,20 @@ function initDetail() {
 
   const buildMainMedia = (w) => {
     if (w.video) {
-      return `<video src="${w.video}" ${w.poster ? `poster="${w.poster}"` : ""} controls playsinline></video>`;
+      return `<video src="${encodeURI(w.video)}" ${w.poster ? `poster="${encodeURI(w.poster)}"` : ""} controls playsinline></video>`;
     }
     if (w.embed) {
       return `<div class="embed">${w.embed}</div>`;
     }
     if (w.image) {
-      return `<img src="${w.image}" alt="${w.title}" />`;
+      return `<img src="${encodeURI(w.image)}" alt="${w.title}" />`;
     }
     return `<div class="placeholder" style="--ph-a:${w.gradient[0]};--ph-b:${w.gradient[1]}">${w.title} — 主视觉</div>`;
   };
 
   const mediaBlock = (work.detail || [])
     .map(
-      (img) => `<img src="${img}" alt="${work.title}" loading="lazy" />`
+      (img) => `<img src="${encodeURI(img)}" alt="${work.title}" loading="lazy" />`
     )
     .join("");
 
