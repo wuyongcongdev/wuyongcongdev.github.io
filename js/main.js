@@ -66,14 +66,15 @@ const works = [
     image: "images/卖点渲染图/一次性切割.jpg",
     detail: [
       "images/卖点渲染图/100+免费ROKR拼装模型库UI图.jpg",
-      "images/卖点渲染图/【UI需求图片】内部俯视-木板.png",
-      "images/卖点渲染图/【UI需求图片】内部俯视-皮.png",
-      "images/卖点渲染图/【UI需求图片】内部俯视.png",
+      "images/卖点渲染图/【UI需求图片】内部俯视-木板.jpg",
+      "images/卖点渲染图/【UI需求图片】内部俯视.jpg",
+      "images/卖点渲染图/六视图-1.jpg",
       "images/卖点渲染图/功率输出识别sensor.jpg",
       "images/卖点渲染图/双摄像头.jpg",
       "images/卖点渲染图/整机气流（替代双风扇）.jpg",
       "images/卖点渲染图/材料吸收率识别sensor.jpg",
       "images/卖点渲染图/红光雕刻.jpg",
+      "images/卖点渲染图/激光雷达.mp4",
     ],
     gradient: ["#3f3f46", "#18181b"],
   },
@@ -267,8 +268,10 @@ function initDetail() {
   };
 
   const mediaBlock = (work.detail || [])
-    .map(
-      (img) => `<img src="${encodeURI(img)}" alt="${work.title}" loading="lazy" />`
+    .map((src) =>
+      /\.(mp4|webm|mov)$/i.test(src)
+        ? `<video src="${encodeURI(src)}" controls playsinline></video>`
+        : `<img src="${encodeURI(src)}" alt="${work.title}" loading="lazy" />`
     )
     .join("");
 
