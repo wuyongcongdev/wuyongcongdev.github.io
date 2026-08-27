@@ -10,7 +10,8 @@
    - category  : 分类（用于筛选）
    - year      : 年份
    - client    : 客户 / 委托方
-   - role      : 你的角色
+   - clientLabel : （可选）「客户」标签的自定义文字，默认「客户」
+   - role      : 你的角色（留空或省略则隐藏该项）
    - desc      : 项目描述（作品详情页显示）
    - gradient  : 占位图渐变色 [起色, 止色]（替换为真实图片后删除）
    - image     : （可选）真实图片路径，例如 "images/work-1.jpg"
@@ -34,11 +35,6 @@ const works = [
   {
     id: "editorial-layout",
     title: "产品白底图渲染",
-    category: "编辑设计",
-    year: "2024",
-    client: "独立杂志",
-    role: "美术指导",
-    desc: "一本关于城市与人文的独立杂志的版式设计。通过严谨的网格、有呼吸感的留白与克制的字体层级，让文字与图像在纸面上形成清晰的阅读节奏。",
     image: "images/六视图-1.jpg",
     detail: [
       "images/六视图-1-2 (3).jpg",
@@ -58,11 +54,11 @@ const works = [
   {
     id: "packaging-design",
     title: "切割机卖点渲染图",
-    category: "包装设计",
-    year: "2023",
-    client: "精品咖啡",
-    role: "包装设计",
-    desc: "为一款精品咖啡豆设计的系列包装。以简洁的几何图形与高级的材质对比，传达产品的纯粹与品质感。",
+    category: "卖点渲染",
+    year: "2026",
+    client: "oc渲染器",
+    clientLabel: "渲染器",
+    desc: "为全球首款60W蓝光切割机打造全套产品视觉方案。以干练的几何形态与硬核工业材质形成对比，传递设备稳定可靠的性能实力与精密制造品质，面向 B 端工厂、工作室客户凸显专业生产力价值",
     image: "images/卖点渲染图/一次性切割.jpg",
     detail: [
       "images/卖点渲染图/100+免费ROKR拼装模型库UI图.jpg",
@@ -111,7 +107,7 @@ const works = [
 ];
 
 /* 分类列表（从数据自动提取，可手动调整顺序） */
-const categories = [...new Set(works.map((w) => w.category))];
+const categories = [...new Set(works.map((w) => w.category))].filter(Boolean);
 
 /* --------------------------------------------------------------------------
    工具函数
@@ -131,7 +127,7 @@ function renderCard(work) {
       <div class="work-card__media">${media}</div>
       <div class="work-card__meta">
         <span class="work-card__title">${work.title}</span>
-        <span class="work-card__cat">${work.category}</span>
+        ${work.category ? `<span class="work-card__cat">${work.category}</span>` : ""}
       </div>
     </a>`;
 }
@@ -275,26 +271,23 @@ function initDetail() {
     )
     .join("");
 
+  const metaItems = [
+    ["分类", work.category],
+    ["年份", work.year],
+    [work.clientLabel || "客户", work.client],
+    ["角色", work.role],
+  ]
+    .filter(([, v]) => v && String(v).trim() !== "")
+    .map(([k, v]) => `<div class="work-detail__meta-item"><span>${k}</span><strong>${v}</strong></div>`)
+    .join("");
+
   container.innerHTML = `
     <a class="work-detail__back" href="works.html">
       <span aria-hidden="true">←</span> 返回作品列表
     </a>
     <h1 class="work-detail__title fade-in is-visible">${work.title}</h1>
-    <div class="work-detail__meta fade-in is-visible">
-      <div class="work-detail__meta-item">
-        <span>分类</span><strong>${work.category}</strong>
-      </div>
-      <div class="work-detail__meta-item">
-        <span>年份</span><strong>${work.year}</strong>
-      </div>
-      <div class="work-detail__meta-item">
-        <span>客户</span><strong>${work.client}</strong>
-      </div>
-      <div class="work-detail__meta-item">
-        <span>角色</span><strong>${work.role}</strong>
-      </div>
-    </div>
-    <p class="work-detail__desc fade-in is-visible">${work.desc}</p>
+    ${metaItems ? `<div class="work-detail__meta fade-in is-visible">${metaItems}</div>` : ""}
+    ${work.desc ? `<p class="work-detail__desc fade-in is-visible">${work.desc}</p>` : ""}
     <div class="work-detail__media fade-in is-visible">
       ${buildMainMedia(work)}
       ${mediaBlock}
